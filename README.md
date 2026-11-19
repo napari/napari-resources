@@ -80,6 +80,26 @@ so it behaves identically from an installed wheel or an editable install. If
 the asset isn't present (e.g. a fresh checkout that hasn't been installed), it
 raises `FileNotFoundError` with instructions.
 
+#### Special logos
+
+The napari silhouette (the logo's shape, without its frame) is hand-made, not
+generated. `special_logos()` lists the versions and `special_logo_path(name)`
+returns one:
+
+- `silhouette-dark`, `silhouette-light`: fixed colours, for dark or light
+  backgrounds;
+- `silhouette-theme-aware`: switches with the reader's colour scheme, for an
+  `<img>` or a favicon;
+- `silhouette-current-color`: filled with `currentColor`, so it takes the
+  colour of the text around it. Paste it inline into HTML, e.g. beside a
+  "napari" link in a site footer; in an `<img>` it has no text colour to take.
+
+```py
+from napari_resources import special_logo_path
+
+svg = special_logo_path("silhouette-current-color").read_text()
+```
+
 #### Rasterizing a logo (making an image / PNG)
 
 The logo SVGs are vector graphics, so getting an image (a numpy array or a PNG)

@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING, Literal
 if TYPE_CHECKING:
     from pathlib import Path
 
-__all__ = ["logo_path", "logo_templates", "logo_variants"]
+__all__ = ["logo_path", "logo_templates", "logo_variants", "special_logo_path", "special_logos"]
 
 logos_dir = _resources.files("napari_resources.resources.logos")
 
@@ -81,3 +81,23 @@ def logo_templates() -> list[str]:
     """
     templates = _resources.files("napari_resources.resources.logos.templates")
     return sorted(p.name.removesuffix(".svg") for p in templates.iterdir() if p.name.endswith(".svg"))
+
+
+def special_logos() -> list[str]:
+    """List the hand-made logos that are not generated (e.g. ``"silhouette-dark"``).
+
+    These are the files in ``resources/logos/special``: the napari silhouette
+    in fixed colours (``-dark``, ``-light``), switching with the reader's
+    colour scheme (``-theme-aware``), or taking the surrounding text colour
+    (``-current-color``, for pasting inline into HTML).
+    """
+    special = logos_dir / "special"
+    return sorted(p.name.removesuffix(".svg") for p in special.iterdir() if p.name.endswith(".svg"))
+
+
+def special_logo_path(name: str) -> Path:
+    """Return the path to a hand-made logo SVG; ``name`` is one of special_logos()."""
+    if name not in special_logos():
+        raise ValueError(f"name must be one of {set(special_logos())}; got '{name}'")
+    with _resources.as_file(logos_dir / "special" / f"{name}.svg") as path:
+        return path
